@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<header>
+    <h1>Current Alerts</h1>
+</header>
+<section>
+    <div class="list-group mb-3">
+        {% for alert in alerts %}
+        <div class="list-group-item">
+            <div class="container-fluid">
+                <div class="row justify-content-between">
+                    <div class="col ml-n3">
+                        <h4 class="list-group-item-heading">
+                            {{ alert.name }} for {{ "$%.2f"|format(alert.price_limit) }}
+                        </h4>
+                    </div>
+                    <div class="col justify-content-right">
+                        <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('alerts.edit_alert', alert_id=alert._id) }}">
+                            change target price
+                        </a>
+                        <a class="btn btn-outline-danger btn-sm" href="{{ url_for('alerts.delete_alert', alert_id=alert._id) }}">
+                            delete alert
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <p><a href="{{alert.item.url}}">{{ alert.item.url }}</a></p>
+            {% if alert.item.price <= alert.price_limit %}
+            <p class="text-success">Last price: {{ "$%.2f"|format(alert.item.price) }}</p>
+            {% else %}
+            <p class="text-danger">Last price: {{ "$%.2f"|format(alert.item.price) }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    <a class="btn btn-primary" href="{{ url_for('alerts.new_alert') }}">
+        Create new
+    </a>
+</section>
+
+{% endblock %}
